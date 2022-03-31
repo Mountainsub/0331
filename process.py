@@ -57,9 +57,32 @@ def code_s(k):
 	return [array, weights]
 
 
-def calculation(dde_ware, indexes_weight, num):
-    calc = rss2("現在値", dde_ware, indexes_weight)
-    return calc 
+def stop_execute?():
+	now = datetime.datetime.now()
+	currently = np.datetime64(now)
+	Y= np.datetime64(now, "Y")
+	M = np.datetime64(now, "M")
+	D= np.datetime64(now, "D")
+	#m = np.datetime64(now, "m")
+	h= np.datetime64(now, "h")
+	m = np.datetime64(now, "m")
+	if h >= 15:
+		print("今日は閉場です。")
+	if (h == 11 and m > 30 ) or (h==12 and m <30):
+		print("お昼休みです。")
+		temp = pd.datetime(str(Y), str(M), str(D), 12, 30)		
+		temp = np.datetime64(temp)
+		sleep_num = float(temp.astype("float64")-currently.astype("float64")-60 )
+		time.sleep(sleep_num)
+	elif h < 9:
+		temp = pd.datetime(str(Y), str(M), str(D), 9, 0)		
+		temp = np.datetime64(temp)
+		sleep_num = float(temp.astype("float64")-currently.astype("float64")-60 )
+		time.sleep(sleep_num)
+	else:
+		pass
+		
+
 
 
 if __name__ == '__main__':
@@ -68,6 +91,11 @@ if __name__ == '__main__':
     count = 0
     
     idx = int(args[1]) * 126
+    if args[2] is not None:
+	switch = args[2]
+	if switch == "on":
+		stop_execute?()
+		#止める
     holder = ClientHolder(idx, code_s(idx)[0], code_s(idx)[1])
     timer = LastNPerfTime(2**20)
     while True:
